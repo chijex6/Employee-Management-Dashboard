@@ -3,15 +3,15 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 export function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const events = [{
-    date: "2024-03-10",
+    date: "2025-02-10",
     title: "Team Meeting",
     type: "meeting"
   }, {
-    date: "2024-03-15",
+    date: "2025-02-15",
     title: "Project Deadline",
     type: "deadline"
   }, {
-    date: "2024-03-20",
+    date: "2025-02-20",
     title: "Review Session",
     type: "review"
   }];
@@ -33,8 +33,8 @@ export function Calendar() {
   return <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Calendar</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-semibold text-white">Calendar</h1>
+          <p className="mt-1 text-sm text-gray-100">
             Manage events and schedules
           </p>
         </div>
@@ -43,7 +43,8 @@ export function Calendar() {
           Add Event
         </button>
       </div>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="bg-white dark:bg-gray-800 border-r border-gray-200 
+        dark:border-gray-700 rounded-lg shadow-sm border border-gray-200">
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center">
             <button onClick={prevMonth} className="p-2 hover:bg-gray-100 rounded-full">
