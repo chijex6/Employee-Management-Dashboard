@@ -27,7 +27,14 @@ export function TeamManagement() {
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
   }];
   const [showTeamActions, setShowTeamActions] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState<{
+    name: string;
+    lead: string;
+    memberCount: number;
+    activeProjects: number;
+    completionRate: number;
+    avatar: string;
+  } | null>(null);
   const [showChangeLeadModal, setShowChangeLeadModal] = useState(false);
   const [showAssignProjectModal, setShowAssignProjectModal] = useState(false);
   const [toast, setToast] = useState<{
@@ -48,11 +55,14 @@ export function TeamManagement() {
       type: "success"
     });
   };
+  console.log("Selected team:", selectedTeam);
+  console.log("Team", teams);
   const TeamActionsMenu = ({
     team
-  }) => <div className="relative">
+  }: { team: { name: string; lead: string; memberCount: number; activeProjects: number; completionRate: number; avatar: string; } }) => <div className="relative">
       <button onClick={() => {
       setSelectedTeam(team);
+      console.log("Selected team:", team);
       setShowTeamActions(!showTeamActions);
     }} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
         <MoreVertical className="h-5 w-5 text-gray-500 dark:text-gray-400" />

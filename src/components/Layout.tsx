@@ -12,7 +12,7 @@ import { Menu } from "lucide-react";
 import { EmployeeDashboard } from "./EmployeeDashboard";
 export function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isAdmin] = useState(true);
+  const [isAdmin] = useState(false);
   return <div className="flex h-screen w-full bg-gray-50 dark:bg-gray-900">
       {sidebarOpen && <div className="fixed inset-0 bg-gray-800/50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />}
       <button className="lg:hidden fixed top-4 left-4 z-30 p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700" onClick={() => setSidebarOpen(true)}>
