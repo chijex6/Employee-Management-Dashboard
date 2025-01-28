@@ -14,6 +14,14 @@ export function Settings() {
       description: "Use dark theme across the application",
       enabled: theme === "dark",
       onChange: toggleTheme
+    }, {
+      name: "High Contrast",
+      description: "Increase contrast for better visibility",
+      enabled: false
+    }, {
+      name: "Reduce Animations",
+      description: "Minimize motion across the interface",
+      enabled: false
     }]
   }, {
     title: "Notifications",
@@ -36,6 +44,22 @@ export function Settings() {
       enabled: true
     }]
   }];
+  const themes = [{
+    name: "Red",
+    color: "bg-red-500"
+  }, {
+    name: "Blue",
+    color: "bg-blue-500"
+  }, {
+    name: "Green",
+    color: "bg-green-500"
+  }, {
+    name: "Purple",
+    color: "bg-purple-500"
+  }, {
+    name: "Orange",
+    color: "bg-orange-500"
+  }];
   return <div className="p-6 max-w-3xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -46,6 +70,21 @@ export function Settings() {
         </p>
       </div>
       <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+              Theme Colors
+            </h2>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Choose your preferred accent color
+            </p>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-5 gap-4">
+              {themes.map(theme => <button key={theme.name} className={`w-full aspect-square rounded-lg ${theme.color} hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-gray-100`} title={theme.name} />)}
+            </div>
+          </div>
+        </div>
         {sections.map(section => <div key={section.title} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center">
