@@ -1,5 +1,8 @@
-import React from "react";
-import { Users2, TrendingUp, CheckCircle, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { Users2, TrendingUp, CheckCircle, Clock, MoreVertical, UserPlus, FolderPlus } from "lucide-react";
+import { ChangeTeamLeadModal } from "./modals/ChangeTeamLeadModal";
+import { AssignProjectModal } from "./modals/AssignProjectModal";
+import { Toast } from "./shared/Toast";
 export function TeamManagement() {
   const teams = [{
     name: "Front-end",
@@ -23,9 +26,57 @@ export function TeamManagement() {
     completionRate: 95,
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
   }];
-  return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
+  const [showTeamActions, setShowTeamActions] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [showChangeLeadModal, setShowChangeLeadModal] = useState(false);
+  const [showAssignProjectModal, setShowAssignProjectModal] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+  } | null>(null);
+  const handleChangeTeamLead = (employeeId: string) => {
+    console.log("Changing team lead:", employeeId);
+    setToast({
+      message: "Team lead updated successfully",
+      type: "success"
+    });
+  };
+  const handleAssignProject = (projectData: any) => {
+    console.log("Assigning project:", projectData);
+    setToast({
+      message: "Project assigned successfully",
+      type: "success"
+    });
+  };
+  const TeamActionsMenu = ({
+    team
+  }) => <div className="relative">
+      <button onClick={() => {
+      setSelectedTeam(team);
+      setShowTeamActions(!showTeamActions);
+    }} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+        <MoreVertical className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+      </button>
+      {showTeamActions && selectedTeam === team && <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10">
+          <div className="py-1">
+            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => {
+          setShowChangeLeadModal(true);
+          setShowTeamActions(false);
+        }}>
+              <UserPlus className="mr-3 h-5 w-5" />
+              Change Team Lead
+            </button>
+            <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => {
+          setShowAssignProjectModal(true);
+          setShowTeamActions(false);
+        }}>
+              <FolderPlus className="mr-3 h-5 w-5" />
+              Assign New Project
+            </button>
+          </div>
+        </div>}
+    </div>;
+  return <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Team Management
@@ -34,15 +85,9 @@ export function TeamManagement() {
           Overview of all teams and their performance metrics
         </p>
       </div>
-  
-      {/* Team Cards */}
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        {teams.map((team) => (
-          <div
-            key={team.name}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-          >
-            {/* Header */}
+        {teams.map(team => <div key={team.name} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Users2 className="h-8 w-8 text-gray-400 dark:text-gray-500" />
@@ -50,16 +95,12 @@ export function TeamManagement() {
                   {team.name}
                 </h2>
               </div>
-              <div className="flex items-center">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src={team.avatar}
-                  alt={team.lead}
-                />
+              <div className="flex items-center space-x-2">
+                <img className="h-8 w-8 rounded-full" src={team.avatar} alt={team.lead} />
+                <TeamActionsMenu team={team} />
               </div>
             </div>
-  
-            {/* Team Lead */}
+
             <div className="mt-2">
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Team Lead
@@ -68,8 +109,7 @@ export function TeamManagement() {
                 {team.lead}
               </p>
             </div>
-  
-            {/* Metrics */}
+
             <div className="mt-4 grid grid-cols-2 gap-4">
               <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-3">
                 <div className="flex items-center">
@@ -94,8 +134,7 @@ export function TeamManagement() {
                 </p>
               </div>
             </div>
-  
-            {/* Completion Rate */}
+
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
@@ -109,20 +148,21 @@ export function TeamManagement() {
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                <div
-                  className="bg-blue-600 rounded-full h-2"
-                  style={{ width: `${team.completionRate}%` }}
-                />
+                <div className="bg-blue-600 rounded-full h-2" style={{
+              width: `${team.completionRate}%`
+            }} />
               </div>
             </div>
-  
-            {/* Button */}
+
             <button className="mt-4 w-full py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
               View Team Details
             </button>
-          </div>
-        ))}
+          </div>)}
       </div>
-    </div>
-  );  
+      {selectedTeam && <>
+          <ChangeTeamLeadModal isOpen={showChangeLeadModal} onClose={() => setShowChangeLeadModal(false)} team={selectedTeam} onChangeTeamLead={handleChangeTeamLead} />
+          <AssignProjectModal isOpen={showAssignProjectModal} onClose={() => setShowAssignProjectModal(false)} team={selectedTeam} onAssignProject={handleAssignProject} />
+        </>}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>;
 }

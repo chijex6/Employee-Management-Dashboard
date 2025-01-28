@@ -41,8 +41,7 @@ export function ProjectManagement() {
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
     }]
   }];
-  return (
-    <div className="p-6 max-w-7xl mx-auto">
+  return <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -61,11 +60,7 @@ export function ProjectManagement() {
   
       {/* Project Cards */}
       <div className="grid grid-cols-1 gap-6">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-          >
+        {projects.map(project => <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
@@ -76,13 +71,7 @@ export function ProjectManagement() {
                   {project.description}
                 </p>
               </div>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  project.status === "Review"
-                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                    : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                }`}
-              >
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${project.status === "Review" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"}`}>
                 {project.status}
               </span>
             </div>
@@ -112,12 +101,9 @@ export function ProjectManagement() {
             {/* Progress Bar */}
             <div className="mt-4">
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                <div
-                  className="bg-blue-600 dark:bg-blue-500 rounded-full h-2"
-                  style={{
-                    width: `${project.progress}%`,
-                  }}
-                />
+                <div className="bg-blue-600 dark:bg-blue-500 rounded-full h-2" style={{
+              width: `${project.progress}%`
+            }} />
               </div>
             </div>
   
@@ -125,23 +111,13 @@ export function ProjectManagement() {
             <div className="mt-4 flex items-center justify-between">
               {/* Project Members */}
               <div className="flex -space-x-2">
-                {project.members.map((member, index) => (
-                  <img
-                    key={index}
-                    className="h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800"
-                    src={member.avatar}
-                    alt={member.name}
-                    title={member.name}
-                  />
-                ))}
+                {project.members.map((member, index) => <img key={index} className="h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" src={member.avatar} alt={member.name} title={member.name} />)}
               </div>
               <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 font-medium">
                 View Details
               </button>
             </div>
-          </div>
-        ))}
+          </div>)}
       </div>
-    </div>
-  );  
+    </div>;
 }
