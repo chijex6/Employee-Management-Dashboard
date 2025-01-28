@@ -3,31 +3,14 @@ import { Users2, TrendingUp, CheckCircle, Clock, MoreVertical, UserPlus, FolderP
 import { ChangeTeamLeadModal } from "./modals/ChangeTeamLeadModal";
 import { AssignProjectModal } from "./modals/AssignProjectModal";
 import { Toast } from "./shared/Toast";
+import { useData } from "../contexts/DataContext";
 export function TeamManagement() {
-  const teams = [{
-    name: "Front-end",
-    lead: "Sarah Wilson",
-    memberCount: 15,
-    activeProjects: 4,
-    completionRate: 92,
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  }, {
-    name: "Back-end",
-    lead: "Michael Chen",
-    memberCount: 12,
-    activeProjects: 3,
-    completionRate: 88,
-    avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  }, {
-    name: "Data Team",
-    lead: "Emily Rodriguez",
-    memberCount: 7,
-    activeProjects: 2,
-    completionRate: 95,
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  }];
+  const {
+    teams
+  } = useData();
   const [showTeamActions, setShowTeamActions] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<{
+    id: number;
     name: string;
     lead: string;
     memberCount: number;
@@ -41,25 +24,28 @@ export function TeamManagement() {
     message: string;
     type: "success" | "error" | "info";
   } | null>(null);
-  const handleChangeTeamLead = (employeeId: string) => {
-    console.log("Changing team lead:", employeeId);
+  const showToast = (message: string, type: "success" | "error" | "info") => {
     setToast({
-      message: "Team lead updated successfully",
-      type: "success"
+      message,
+      type
     });
   };
-  const handleAssignProject = (projectData: any) => {
-    console.log("Assigning project:", projectData);
-    setToast({
-      message: "Project assigned successfully",
-      type: "success"
-    });
+  const handleSuccess = (message: string) => {
+    showToast(message, "success");
+    setShowTeamActions(false);
   };
-  console.log("Selected team:", selectedTeam);
-  console.log("Team", teams);
   const TeamActionsMenu = ({
     team
-  }: { team: { name: string; lead: string; memberCount: number; activeProjects: number; completionRate: number; avatar: string; } }) => <div className="relative">
+  }: {
+    team: {
+      name: string;
+      lead: string;
+      memberCount: number;
+      activeProjects: number;
+      completionRate: number;
+      avatar: string;
+    };
+  }) => <div className="relative">
       <button onClick={() => {
       setSelectedTeam(team);
       console.log("Selected team:", team);
@@ -170,8 +156,8 @@ export function TeamManagement() {
           </div>)}
       </div>
       {selectedTeam && <>
-          <ChangeTeamLeadModal isOpen={showChangeLeadModal} onClose={() => setShowChangeLeadModal(false)} team={selectedTeam} onChangeTeamLead={handleChangeTeamLead} />
-          <AssignProjectModal isOpen={showAssignProjectModal} onClose={() => setShowAssignProjectModal(false)} team={selectedTeam} onAssignProject={handleAssignProject} />
+          <ChangeTeamLeadModal isOpen={showChangeLeadModal} onClose={() => setShowChangeLeadModal(false)} team={selectedTeam} onSuccess={() => handleSuccess("Team lead updated successfully")} />
+          <AssignProjectModal isOpen={showAssignProjectModal} onClose={() => setShowAssignProjectModal(false)} team={selectedTeam} onSuccess={() => handleSuccess("Project assigned successfully")} />
         </>}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>;

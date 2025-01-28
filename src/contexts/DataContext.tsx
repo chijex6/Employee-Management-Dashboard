@@ -1,23 +1,13 @@
 // contexts/DataContext.tsx
 import React, { createContext, useContext, useState } from 'react';
-import {
-  Employee,
-  Team,
-  Project,
-  Event,
-  initialEmployees,
-  initialTeams,
-  initialProjects,
-  initialEvents,
-} from '../components/data';
-
+import { Employee, Team, Project, Event, initialEmployees, initialTeams, initialProjects, initialEvents } from '../components/data';
 interface DataContextType {
   // Data
   employees: Employee[];
   teams: Team[];
   projects: Project[];
   events: Event[];
-  
+
   // CRUD Operations
   addEmployee: (employee: Employee) => void;
   updateEmployee: (id: number, updatedData: Partial<Employee>) => void;
@@ -27,7 +17,6 @@ interface DataContextType {
   updateProject: (id: number, updatedData: Partial<Project>) => void;
   addEvent: (event: Event) => void;
 }
-
 const DataContext = createContext<DataContextType>({
   employees: [],
   teams: [],
@@ -39,10 +28,13 @@ const DataContext = createContext<DataContextType>({
   updateTeam: () => {},
   addProject: () => {},
   updateProject: () => {},
-  addEvent: () => {},
+  addEvent: () => {}
 });
-
-export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const DataProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({
+  children
+}) => {
   const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
   const [teams, setTeams] = useState<Team[]>(initialTeams);
   const [projects, setProjects] = useState<Project[]>(initialProjects);
@@ -50,61 +42,55 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Employee operations
   const addEmployee = (employee: Employee) => {
-    setEmployees((prev) => [...prev, employee]);
+    setEmployees(prev => [...prev, employee]);
   };
-
   const updateEmployee = (id: number, updatedData: Partial<Employee>) => {
-    setEmployees((prev) =>
-      prev.map((emp) => (emp.id === id ? { ...emp, ...updatedData } : emp))
-    );
+    setEmployees(prev => prev.map(emp => emp.id === id ? {
+      ...emp,
+      ...updatedData
+    } : emp));
   };
 
   // Team operations
   const addTeam = (team: Team) => {
-    setTeams((prev) => [...prev, team]);
+    setTeams(prev => [...prev, team]);
   };
-
   const updateTeam = (id: number, updatedData: Partial<Team>) => {
-    setTeams((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updatedData } : t))
-    );
+    setTeams(prev => prev.map(t => t.id === id ? {
+      ...t,
+      ...updatedData
+    } : t));
   };
 
   // Project operations
   const addProject = (project: Project) => {
-    setProjects((prev) => [...prev, project]);
+    setProjects(prev => [...prev, project]);
   };
-
   const updateProject = (id: number, updatedData: Partial<Project>) => {
-    setProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
-    );
+    setProjects(prev => prev.map(p => p.id === id ? {
+      ...p,
+      ...updatedData
+    } : p));
   };
 
   // Event operations
   const addEvent = (event: Event) => {
-    setEvents((prev) => [...prev, event]);
+    setEvents(prev => [...prev, event]);
   };
-
-  return (
-    <DataContext.Provider
-      value={{
-        employees,
-        teams,
-        projects,
-        events,
-        addEmployee,
-        updateEmployee,
-        addTeam,
-        updateTeam,
-        addProject,
-        updateProject,
-        addEvent,
-      }}
-    >
+  return <DataContext.Provider value={{
+    employees,
+    teams,
+    projects,
+    events,
+    addEmployee,
+    updateEmployee,
+    addTeam,
+    updateTeam,
+    addProject,
+    updateProject,
+    addEvent
+  }}>
       {children}
-    </DataContext.Provider>
-  );
+    </DataContext.Provider>;
 };
-
 export const useData = () => useContext(DataContext);

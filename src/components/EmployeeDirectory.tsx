@@ -1,29 +1,41 @@
 import React, { useState } from "react";
 import { Search, Filter, Mail, Phone, Plus } from "lucide-react";
 import { useData } from "../contexts/DataContext";
+import { AddEmployeeModal } from "./modals/AddEmployeeModal";
 export function EmployeeDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("All");
-  const { employees } = useData();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+  } | null>(null);
+  const {
+    employees
+  } = useData();
   const teams = ["All", "Front-end", "Back-end", "Cloud Computing", "IT", "HR", "Data Team", "AI & ML", "Marketing", "Sales", "Finance"];
   const filteredEmployees = employees.filter(employee => {
     const matchesSearch = employee.name.toLowerCase().includes(searchTerm.toLowerCase()) || employee.role.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTeam = selectedTeam === "All" || employee.team === selectedTeam;
     return matchesSearch && matchesTeam;
   });
+  const handleAddSuccess = () => {
+    setToast({
+      message: "Employee added successfully",
+      type: "success"
+    });
+  };
   return <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Employee Directory
         </h1>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => setIsAddModalOpen(true)}>
           <Plus className="h-5 w-5 mr-2" />
           Add Employee
         </button>
       </div>
-  
-      {/* Search and Filter */}
+
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -mt-2.5 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -38,8 +50,7 @@ export function EmployeeDirectory() {
           </select>
         </div>
       </div>
-  
-      {/* Employee Cards */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredEmployees.map(employee => <div key={employee.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-start">
@@ -71,5 +82,7 @@ export function EmployeeDirectory() {
             </div>
           </div>)}
       </div>
+      <AddEmployeeModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onSuccess={handleAddSuccess} />
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>;
 }

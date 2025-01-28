@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import { Modal } from "../shared/Modal";
+import { useData } from "../../contexts/DataContext";
 interface AssignProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   team: {
+    id: number;
     name: string;
   };
-  onAssignProject: (projectData: {
-    name: string;
-    description: string;
-    deadline: string;
-  }) => void;
+  onSuccess: () => void;
 }
 export function AssignProjectModal({
   isOpen,
   onClose,
   team,
-  onAssignProject
+  onSuccess
 }: AssignProjectModalProps) {
+  const {
+    addProject
+  } = useData();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -25,8 +26,24 @@ export function AssignProjectModal({
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAssignProject(formData);
+    const newProject = {
+      id: Date.now(),
+      name: formData.name,
+      description: formData.description,
+      team: team.name,
+      deadline: formData.deadline,
+      progress: 0,
+      status: "Not Started" as const,
+      members: [] // Initially empty, can be updated later
+    };
+    addProject(newProject);
+    onSuccess();
     onClose();
+    setFormData({
+      name: "",
+      description: "",
+      deadline: ""
+    });
   };
   return <Modal isOpen={isOpen} onClose={onClose} title={`Assign Project to ${team.name}`}>
       <form onSubmit={handleSubmit} className="space-y-4">
